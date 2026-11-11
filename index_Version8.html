@@ -1,0 +1,969 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Proyecto educativo para estudiantes sobre automedicación y uso responsable de medicamentos en Juliaca.">
+  <meta name="theme-color" content="#14324b">
+  <title>MEDISCAM | Uso responsable de medicamentos</title>
+
+  <style>
+    :root {
+      --navy: #14324b;
+      --blue: #176b87;
+      --teal: #39a99b;
+      --paper: #f4f7f8;
+      --white: #fff;
+      --ink: #20313d;
+      --muted: #62727d;
+      --line: #dce5e9;
+      --warning: #fff4dc;
+      --warning-ink: #744f00;
+      --shadow: 0 12px 32px rgba(20, 50, 75, .09);
+    }
+
+    * { box-sizing: border-box; }
+
+    html {
+      scroll-behavior: smooth;
+      scroll-padding-top: 85px;
+    }
+
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+      line-height: 1.6;
+    }
+
+    button, input { font: inherit; }
+    button { cursor: pointer; }
+    .wrap { width: min(1120px, calc(100% - 32px)); margin-inline: auto; }
+
+    .notice {
+      padding: 11px 16px;
+      background: var(--warning);
+      color: var(--warning-ink);
+      text-align: center;
+      font-size: .9rem;
+      font-weight: 750;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 5;
+      background: rgba(255,255,255,.95);
+      border-bottom: 1px solid var(--line);
+      backdrop-filter: blur(10px);
+    }
+
+    .nav {
+      min-height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      color: var(--navy);
+      font-size: 1.3rem;
+      font-weight: 900;
+      text-decoration: none;
+    }
+
+    .brand-mark {
+      display: grid;
+      place-items: center;
+      width: 42px;
+      height: 42px;
+      border-radius: 14px;
+      color: white;
+      background: linear-gradient(135deg, var(--blue), var(--teal));
+      font-size: 1.5rem;
+    }
+
+    .nav-links { display: flex; gap: 18px; }
+
+    .nav-links a {
+      color: var(--muted);
+      font-size: .9rem;
+      font-weight: 750;
+      text-decoration: none;
+    }
+
+    .nav-links a:hover { color: var(--blue); }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      padding: 68px 0;
+      color: white;
+      background: linear-gradient(115deg, #14324b, #176b87 72%, #258e91);
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      width: 330px;
+      height: 330px;
+      right: -80px;
+      top: -110px;
+      border: 1px solid rgba(255,255,255,.2);
+      border-radius: 50%;
+      box-shadow: 0 0 0 35px rgba(255,255,255,.04),
+                  0 0 0 75px rgba(255,255,255,.035);
+      animation: drift 9s ease-in-out infinite alternate;
+      pointer-events: none;
+    }
+
+    @keyframes drift {
+      from { transform: translateY(0) rotate(0); }
+      to { transform: translateY(18px) rotate(12deg); }
+    }
+
+    .hero-content { position: relative; z-index: 1; max-width: 760px; }
+
+    .eyebrow {
+      display: inline-block;
+      padding: 5px 11px;
+      border: 1px solid rgba(255,255,255,.34);
+      border-radius: 999px;
+      color: #d9fffa;
+      font-size: .76rem;
+      font-weight: 850;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 15px 0 12px;
+      font-size: clamp(2.2rem, 6vw, 4rem);
+      line-height: 1.08;
+    }
+
+    .hero p { max-width: 670px; color: #e4f2f5; font-size: 1.08rem; }
+
+    .hero-note {
+      max-width: 720px;
+      margin-top: 24px;
+      padding: 14px 17px;
+      border-left: 4px solid #6de0c9;
+      border-radius: 8px;
+      background: rgba(255,255,255,.11);
+    }
+
+    main { padding: 38px 0 64px; }
+
+    .search-panel, .info-panel {
+      padding: clamp(20px, 4vw, 34px);
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      background: var(--white);
+      box-shadow: var(--shadow);
+    }
+
+    h2 {
+      margin: 0 0 8px;
+      color: var(--navy);
+      font-size: clamp(1.55rem, 3vw, 2rem);
+      line-height: 1.2;
+    }
+
+    .subtext { margin: 0; color: var(--muted); }
+
+    .search-row { display: flex; gap: 12px; margin-top: 22px; }
+
+    input[type="search"] {
+      width: 100%;
+      min-width: 0;
+      padding: 13px 15px;
+      border: 2px solid var(--line);
+      border-radius: 12px;
+      color: var(--ink);
+      background: white;
+    }
+
+    input[type="search"]:focus {
+      outline: 3px solid #bce7e1;
+      border-color: var(--teal);
+    }
+
+    .clear-button, .chip {
+      border: 0;
+      border-radius: 10px;
+      font-weight: 750;
+    }
+
+    .clear-button {
+      flex: 0 0 auto;
+      padding: 0 18px;
+      color: white;
+      background: var(--blue);
+    }
+
+    .clear-button:hover { background: var(--navy); }
+
+    .filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 9px;
+      margin-top: 16px;
+    }
+
+    .chip {
+      padding: 8px 12px;
+      border: 1px solid var(--line);
+      color: var(--navy);
+      background: #f8fbfc;
+      font-size: .88rem;
+    }
+
+    .chip:hover, .chip.active {
+      border-color: var(--blue);
+      color: white;
+      background: var(--blue);
+    }
+
+    .results-section { margin-top: 36px; }
+
+    .result-head {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 12px;
+      margin: 30px 0 16px;
+    }
+
+    #resultCount { color: var(--muted); font-size: .9rem; }
+
+    .catalog-note {
+      margin: 0 0 17px;
+      padding: 12px 15px;
+      border-left: 4px solid var(--teal);
+      border-radius: 8px;
+      background: #eaf6f4;
+      color: #284f50;
+      font-size: .9rem;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    .card {
+      display: flex;
+      flex-direction: column;
+      min-height: 230px;
+      padding: 20px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: white;
+      box-shadow: 0 5px 18px rgba(20,50,75,.045);
+      animation: appear .32s ease both;
+      transition: transform .2s ease, box-shadow .2s ease;
+    }
+
+    .card:hover { transform: translateY(-4px); box-shadow: var(--shadow); }
+
+    @keyframes appear {
+      from { opacity: 0; transform: translateY(9px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .tag {
+      align-self: flex-start;
+      padding: 4px 9px;
+      border-radius: 999px;
+      background: #e8f4f4;
+      color: #176b70;
+      font-size: .72rem;
+      font-weight: 850;
+      text-transform: uppercase;
+    }
+
+    .card h3 {
+      margin: 12px 0 6px;
+      color: var(--navy);
+      font-size: 1.12rem;
+      line-height: 1.35;
+    }
+
+    .card p { margin: 0 0 12px; color: var(--muted); font-size: .91rem; }
+
+    .card .caution {
+      margin-top: auto;
+      padding-top: 10px;
+      border-top: 1px solid var(--line);
+      color: #735300;
+      font-size: .84rem;
+    }
+
+    .empty {
+      display: none;
+      margin-top: 16px;
+      padding: 28px;
+      border: 1px dashed #b6c7ce;
+      border-radius: 16px;
+      background: white;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    .section-block { padding: 42px 0 10px; }
+    .section-intro { max-width: 760px; margin-bottom: 20px; }
+
+    .story-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    .story-card {
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: white;
+      box-shadow: var(--shadow);
+    }
+
+    .story-art {
+      display: grid;
+      place-items: center;
+      min-height: 170px;
+      background: linear-gradient(135deg, #e6f4f4, #f3f7fa);
+    }
+
+    .story-art svg { width: 160px; height: 140px; }
+
+    .story-copy { padding: 18px; }
+
+    .story-copy .scene {
+      color: var(--blue);
+      font-size: .75rem;
+      font-weight: 850;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+    }
+
+    .story-copy h3 { margin: 5px 0 8px; color: var(--navy); }
+    .story-copy p { margin: 0; color: var(--muted); font-size: .92rem; }
+
+    .dialogue {
+      margin-top: 12px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      background: #edf7f6;
+      color: var(--navy);
+      font-size: .88rem;
+      font-weight: 700;
+    }
+
+    .consequence-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      margin-top: 20px;
+    }
+
+    .consequence-card {
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: 15px;
+      background: white;
+    }
+
+    .consequence-card .symbol {
+      display: inline-grid;
+      place-items: center;
+      width: 38px;
+      height: 38px;
+      margin-bottom: 8px;
+      border-radius: 12px;
+      background: #fff1e8;
+      color: #a64b20;
+      font-weight: 900;
+    }
+
+    .consequence-card h3 { margin: 0 0 6px; color: var(--navy); font-size: 1rem; }
+    .consequence-card p { margin: 0; color: var(--muted); font-size: .9rem; }
+
+    .info-panel { margin-top: 42px; }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      margin-top: 20px;
+    }
+
+    .info-item { padding: 17px; border-radius: 13px; background: #f2f8f8; }
+    .info-item strong { display: block; margin-bottom: 5px; color: var(--navy); }
+    .info-item p { margin: 0; color: var(--muted); font-size: .9rem; }
+
+    .urgent {
+      margin-top: 18px;
+      padding: 16px;
+      border: 1px solid #f0c7b9;
+      border-radius: 13px;
+      background: #fff4f0;
+      color: #71341f;
+    }
+
+    footer {
+      padding: 26px 0;
+      color: #d4e0e5;
+      background: #14324b;
+      text-align: center;
+      font-size: .87rem;
+    }
+
+    @media (max-width: 800px) {
+      .cards, .story-grid, .consequence-grid, .info-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .nav-links { gap: 12px; }
+    }
+
+    @media (max-width: 560px) {
+      .nav { min-height: 64px; }
+      .nav-links { display: none; }
+      .hero { padding: 48px 0; }
+      .cards, .story-grid, .consequence-grid, .info-grid { grid-template-columns: 1fr; }
+      .search-row { flex-direction: column; }
+      .clear-button { padding: 12px; }
+      .result-head { align-items: start; flex-direction: column; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        scroll-behavior: auto !important;
+        animation-duration: .01ms !important;
+        transition-duration: .01ms !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="notice">
+    ⚠️ Información educativa: esta página no diagnostica ni recomienda qué medicamento tomar.
+  </div>
+
+  <header>
+    <div class="wrap nav">
+      <a class="brand" href="#inicio" aria-label="MEDISCAM, inicio">
+        <span class="brand-mark" aria-hidden="true">+</span>
+        <span>MEDISCAM</span>
+      </a>
+      <nav class="nav-links" aria-label="Navegación principal">
+        <a href="#buscador">Buscador</a>
+        <a href="#medicamentos">Medicamentos</a>
+        <a href="#fotonovela">Fotonovela</a>
+        <a href="#consecuencias">Consecuencias</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="hero" id="inicio">
+    <div class="wrap hero-content">
+      <span class="eyebrow">Proyecto educativo · Juliaca</span>
+      <h1>Conoce los riesgos.<br>Cuida tu salud.</h1>
+      <p>
+        Aprende sobre nombres comerciales y principios activos mencionados con frecuencia.
+        Las presentaciones y fórmulas pueden cambiar.
+      </p>
+      <div class="hero-note">
+        <strong>Antes de tomar un medicamento:</strong> habla con un adulto de confianza
+        y consulta con un profesional de salud. No te guíes únicamente por el nombre de una marca.
+      </div>
+    </div>
+  </section>
+
+  <main class="wrap">
+    <section class="search-panel" id="buscador">
+      <h2>Busca por síntoma o nombre</h2>
+      <p class="subtext">
+        Prueba con: dolor de cabeza, fiebre, tos, garganta, alergia o gripe.
+      </p>
+
+      <div class="search-row">
+        <input
+          id="search"
+          type="search"
+          placeholder="Escribe un síntoma o medicamento…"
+          aria-label="Buscar por síntoma o nombre de medicamento"
+          autocomplete="off"
+        >
+        <button class="clear-button" id="clear" type="button">Mostrar todos</button>
+      </div>
+
+      <div class="filters" aria-label="Búsquedas frecuentes">
+        <button class="chip" type="button" data-query="gripe">Gripe / resfrío</button>
+        <button class="chip" type="button" data-query="dolor de cabeza">Dolor de cabeza</button>
+        <button class="chip" type="button" data-query="fiebre">Fiebre</button>
+        <button class="chip" type="button" data-query="tos">Tos / flema</button>
+        <button class="chip" type="button" data-query="garganta">Dolor de garganta</button>
+        <button class="chip" type="button" data-query="alergia">Alergia / estornudos</button>
+        <button class="chip" type="button" data-query="congestion">Congestión nasal</button>
+        <button class="chip" type="button" data-query="respiracion">Respiración</button>
+      </div>
+    </section>
+
+    <section class="results-section" id="medicamentos">
+      <div class="result-head">
+        <div>
+          <h2>Medicamentos mencionados</h2>
+          <p class="subtext">La búsqueda es informativa; no elige un tratamiento para ti.</p>
+        </div>
+        <span id="resultCount" aria-live="polite"></span>
+      </div>
+
+      <p class="catalog-note">
+        <strong>Importante:</strong> las concentraciones indicadas son ejemplos de presentaciones,
+        no instrucciones de uso. Revisa el principio activo en el envase y consulta antes de usar
+        o combinar productos.
+      </p>
+
+      <div class="cards" id="cards"></div>
+      <div class="empty" id="empty">
+        No encontramos coincidencias. Prueba con otra palabra o selecciona uno de los filtros.
+      </div>
+    </section>
+
+    <section class="section-block" id="fotonovela">
+      <div class="section-intro">
+        <span class="eyebrow" style="background:#176b87;color:white;border:0">Fotonovela educativa</span>
+        <h2 style="margin-top:12px">Una mezcla que pudo evitarse</h2>
+        <p class="subtext">Una historia breve sobre leer las etiquetas y pedir orientación.</p>
+      </div>
+
+      <div class="story-grid">
+        <article class="story-card">
+          <div class="story-art">
+            <svg viewBox="0 0 180 140" role="img" aria-label="Ilustración de un estudiante resfriado">
+              <circle cx="90" cy="48" r="28" fill="#f1c7a5"/>
+              <path d="M62 46c1-26 48-38 58-4-12-8-35-9-58 4" fill="#263d50"/>
+              <path d="M52 132c3-37 18-54 38-54s36 17 39 54" fill="#176b87"/>
+              <path d="M76 53h4m20 0h4" stroke="#20313d" stroke-width="4" stroke-linecap="round"/>
+              <path d="M83 66q8 6 16 0" fill="none" stroke="#a9544b" stroke-width="3" stroke-linecap="round"/>
+              <path d="M133 27l8 13h-16z" fill="#f2b84b"/>
+              <path d="M133 31v4m0 3v1" stroke="white" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div class="story-copy">
+            <span class="scene">Escena 1 · En casa</span>
+            <h3>“Me siento resfriado”</h3>
+            <p>Alex tiene congestión y dolor de cabeza. Busca medicamentos que quedaron en casa.</p>
+            <div class="dialogue">Alex: “¿Puedo tomar dos productos para sentirme mejor?”</div>
+          </div>
+        </article>
+
+        <article class="story-card">
+          <div class="story-art">
+            <svg viewBox="0 0 180 140" role="img" aria-label="Ilustración de cajas de medicamentos y señal de precaución">
+              <rect x="28" y="39" width="54" height="72" rx="8" fill="#fff" stroke="#176b87" stroke-width="3"/>
+              <rect x="98" y="39" width="54" height="72" rx="8" fill="#fff" stroke="#39a99b" stroke-width="3"/>
+              <path d="M28 48q0-9 9-9h36q9 0 9 9v9H28zm70 0q0-9 9-9h36q9 0 9 9v9H98z" fill="#176b87"/>
+              <path d="M40 77h30M40 87h22M110 77h30M110 87h22" stroke="#9aabb4" stroke-width="4" stroke-linecap="round"/>
+              <circle cx="90" cy="105" r="20" fill="#fff1df" stroke="#e49a30" stroke-width="3"/>
+              <path d="M90 94v13m0 6v1" stroke="#9a5c00" stroke-width="4" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div class="story-copy">
+            <span class="scene">Escena 2 · Antes de tomar</span>
+            <h3>Revisa los ingredientes</h3>
+            <p>Dos productos con marcas distintas podrían compartir un principio activo. La fórmula depende de la presentación.</p>
+            <div class="dialogue">Familiar: “No los combines sin revisar las cajas y consultar”.</div>
+          </div>
+        </article>
+
+        <article class="story-card">
+          <div class="story-art">
+            <svg viewBox="0 0 180 140" role="img" aria-label="Ilustración de un estudiante consultando a una profesional de salud">
+              <circle cx="55" cy="47" r="21" fill="#f1c7a5"/>
+              <path d="M28 119c2-31 12-48 27-48s26 17 28 48" fill="#176b87"/>
+              <circle cx="124" cy="43" r="22" fill="#e9b995"/>
+              <path d="M96 119c2-33 12-51 28-51s27 18 29 51" fill="#39a99b"/>
+              <path d="M109 73l15 19 14-19" fill="white" stroke="#dce5e9" stroke-width="2"/>
+              <rect x="116" y="91" width="16" height="21" rx="3" fill="white"/>
+              <path d="M124 96v11m-5-5h10" stroke="#176b87" stroke-width="3" stroke-linecap="round"/>
+              <path d="M69 35q11-20 27-4" fill="none" stroke="#176b87" stroke-width="3" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div class="story-copy">
+            <span class="scene">Escena 3 · Decisión segura</span>
+            <h3>Pregunta a un profesional</h3>
+            <p>Alex habla con un adulto y consulta con un profesional antes de tomar cualquier medicamento.</p>
+            <div class="dialogue">Profesional: “Primero revisemos tus síntomas y el producto exacto”.</div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section-block" id="consecuencias">
+      <div class="section-intro">
+        <h2>Consecuencias posibles de la automedicación</h2>
+        <p class="subtext">Los riesgos dependen del medicamento, la persona y la forma de uso.</p>
+      </div>
+
+      <div class="consequence-grid">
+        <article class="consequence-card">
+          <span class="symbol" aria-hidden="true">01</span>
+          <h3>Duplicar un ingrediente</h3>
+          <p>Algunos productos para la gripe pueden compartir ingredientes. Duplicarlos por error puede causar una sobredosis y daños graves.</p>
+        </article>
+        <article class="consequence-card">
+          <span class="symbol" aria-hidden="true">02</span>
+          <h3>Efectos secundarios</h3>
+          <p>Un medicamento puede causar reacciones no deseadas, por ejemplo sueño, molestias o alergias, según el producto y la persona.</p>
+        </article>
+        <article class="consequence-card">
+          <span class="symbol" aria-hidden="true">03</span>
+          <h3>Interacciones</h3>
+          <p>Algunos medicamentos pueden interactuar con otros productos o con ciertas condiciones de salud.</p>
+        </article>
+        <article class="consequence-card">
+          <span class="symbol" aria-hidden="true">04</span>
+          <h3>Retrasar una consulta</h3>
+          <p>Aliviar temporalmente un síntoma puede retrasar la evaluación de la causa cuando se necesita atención profesional.</p>
+        </article>
+        <article class="consequence-card">
+          <span class="symbol" aria-hidden="true">05</span>
+          <h3>Usar mal antibióticos</h3>
+          <p>Los antibióticos no curan los resfríos virales. Usarlos sin indicación contribuye a la resistencia de las bacterias.</p>
+        </article>
+        <article class="consequence-card">
+          <span class="symbol" aria-hidden="true">06</span>
+          <h3>Confundir marcas y fórmulas</h3>
+          <p>Un nombre comercial puede tener distintas presentaciones. Hay que comprobar el principio activo en el envase.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="info-panel" id="uso-responsable">
+      <h2>Reglas para cuidar tu salud</h2>
+      <div class="info-grid">
+        <div class="info-item">
+          <strong>No combines por tu cuenta</strong>
+          <p>Dos productos distintos pueden compartir ingredientes. Consulta antes de tomar medicamentos juntos.</p>
+        </div>
+        <div class="info-item">
+          <strong>Revisa el envase</strong>
+          <p>Comprueba el principio activo, las advertencias y la presentación; no te guíes solo por la marca.</p>
+        </div>
+        <div class="info-item">
+          <strong>Antibióticos: solo con indicación</strong>
+          <p>No uses sobrantes ni compartas antibióticos. Un profesional debe determinar si son necesarios.</p>
+        </div>
+      </div>
+
+      <div class="urgent">
+        <strong>Busca ayuda urgente</strong> si alguien tiene dificultad para respirar, se desmaya,
+        presenta hinchazón repentina o pudo tomar una cantidad incorrecta de medicamento.
+        Avísale de inmediato a un adulto y contacten los servicios de emergencia locales.
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <strong>MEDISCAM · Material educativo para estudiantes</strong>
+      <div>Este sitio no diagnostica ni reemplaza la orientación de un médico o farmacéutico.</div>
+    </div>
+  </footer>
+
+  <script>
+    // Las etiquetas ayudan a encontrar información; no son recomendaciones de tratamiento.
+    const medicines = [
+      {
+        name: "Nastizol Compositum",
+        group: "Antigripal de marca",
+        description: "Nombre comercial de un producto para síntomas de resfrío. Revisa los principios activos de la presentación exacta.",
+        caution: "No lo combines con otro antigripal sin consultar: podrían repetirse ingredientes.",
+        tags: "gripe resfrio congestion congestion nasal nariz tapada estornudos dolor de cabeza fiebre dolor cuerpo"
+      },
+      {
+        name: "Panadol Antigripal",
+        group: "Antigripal de marca",
+        description: "Hay presentaciones antigripales con combinaciones de ingredientes. Comprueba la fórmula en el envase.",
+        caution: "Puede compartir ingredientes con otros productos para gripe. No los combines por tu cuenta.",
+        tags: "gripe resfrio congestion congestion nasal estornudos dolor de cabeza fiebre"
+      },
+      {
+        name: "Tapsín Antigripal",
+        group: "Antigripal de marca",
+        description: "El nombre puede corresponder a distintas presentaciones. Revisa sus ingredientes y advertencias.",
+        caution: "La composición no se confirma solo por la marca. Consulta antes de combinarlo.",
+        tags: "gripe resfrio congestion estornudos dolor de cabeza fiebre"
+      },
+      {
+        name: "Dolocordralan Antigripal",
+        group: "Antigripal de marca",
+        description: "Producto comercial asociado a síntomas de resfrío en algunas presentaciones. La fórmula puede variar.",
+        caution: "Revisa los ingredientes y evita combinar productos para gripe sin orientación profesional.",
+        tags: "gripe resfrio dolor de cabeza fiebre malestar cuerpo"
+      },
+      {
+        name: "Congestex",
+        group: "Producto para síntomas de resfrío",
+        description: "El nombre y la composición pueden variar. Revisa el envase para identificar los principios activos.",
+        caution: "Consulta si tienes una condición de salud o tomas otros medicamentos.",
+        tags: "gripe resfrio congestion congestion nasal nariz tapada estornudos"
+      },
+      {
+        name: "Gripal",
+        group: "Antigripal de marca",
+        description: "Nombre usado para productos de resfrío cuya fórmula puede cambiar según la presentación.",
+        caution: "No lo combines con otros medicamentos para gripe sin comprobar antes sus ingredientes.",
+        tags: "gripe resfrio congestion dolor de cabeza fiebre"
+      },
+      {
+        name: "Trioval",
+        group: "Antigripal de marca",
+        description: "Producto comercial para síntomas de resfrío. Comprueba qué contiene la presentación disponible.",
+        caution: "Lee las advertencias del envase y pregunta antes de usarlo con otros productos.",
+        tags: "gripe resfrio congestion estornudos dolor de cabeza fiebre"
+      },
+      {
+        name: "Paracetamol",
+        group: "Analgésico y antipirético",
+        description: "Se encuentra en distintas presentaciones; 500 mg y 1000 mg son ejemplos de concentraciones, no instrucciones de uso.",
+        caution: "Varios productos para la gripe también pueden contener paracetamol. Duplicarlo accidentalmente puede causar daño grave al hígado.",
+        tags: "paracetamol fiebre dolor dolor de cabeza cabeza dolor cuerpo"
+      },
+      {
+        name: "Panadol",
+        group: "Marca de analgésicos",
+        description: "Algunas presentaciones contienen paracetamol. Confirma el principio activo y la cantidad en el envase.",
+        caution: "Otros medicamentos para gripe también pueden contener paracetamol. Consulta antes de combinarlos.",
+        tags: "dolor de cabeza cabeza fiebre dolor garganta dolor de garganta dolor cuerpo paracetamol"
+      },
+      {
+        name: "Kitadol",
+        group: "Marca de analgésicos",
+        description: "Verifica el principio activo de la presentación: los nombres comerciales pueden abarcar productos distintos.",
+        caution: "No lo combines con otros productos hasta confirmar sus ingredientes con un profesional.",
+        tags: "dolor de cabeza cabeza fiebre dolor garganta dolor de garganta dolor cuerpo"
+      },
+      {
+        name: "Ibuprofeno",
+        group: "Antiinflamatorio (AINE)",
+        description: "Hay presentaciones de distintas concentraciones; 400 mg y 600 mg son ejemplos, no instrucciones de uso. No es un tratamiento específico para problemas respiratorios.",
+        caution: "No es adecuado para todas las personas y puede tener efectos adversos o interacciones. Consulta con un profesional.",
+        tags: "ibuprofeno dolor dolor de cabeza cabeza fiebre dolor garganta garganta inflamacion dolor cuerpo"
+      },
+      {
+        name: "Doloflam",
+        group: "Marca de analgésicos",
+        description: "La fórmula puede depender de la presentación. Busca el principio activo en la caja o prospecto.",
+        caution: "Los analgésicos no son adecuados para todas las personas. Consulta antes de usarlos.",
+        tags: "dolor de cabeza cabeza garganta dolor garganta inflamacion fiebre dolor cuerpo"
+      },
+      {
+        name: "Anaflex",
+        group: "Marca de analgésicos",
+        description: "Hay productos con este nombre que pueden tener distintas fórmulas. Comprueba el envase.",
+        caution: "No supongas que contiene un ingrediente específico ni que es intercambiable con otra marca.",
+        tags: "dolor de cabeza cabeza garganta dolor garganta inflamacion fiebre dolor cuerpo"
+      },
+      {
+        name: "Aproxen",
+        group: "Marca de analgésicos",
+        description: "Confirma el principio activo y la presentación en el empaque antes de usarlo.",
+        caution: "Algunos analgésicos pueden causar efectos adversos o interactuar con otros medicamentos.",
+        tags: "dolor de cabeza cabeza garganta dolor garganta inflamacion fiebre dolor cuerpo"
+      },
+      {
+        name: "Nodalgina",
+        group: "Marca de analgésicos",
+        description: "La composición debe verificarse en el envase de la presentación disponible.",
+        caution: "Si tienes fiebre alta o persistente, avisa a un adulto y busca orientación de salud.",
+        tags: "dolor de cabeza cabeza fiebre dolor cuerpo"
+      },
+      {
+        name: "Salbutamol inhalador",
+        group: "Broncodilatador",
+        description: "Algunos inhaladores indican 100 microgramos por dosis, pero la presentación puede variar. Se utiliza para ciertas condiciones respiratorias bajo orientación profesional.",
+        caution: "No es tratamiento para cualquier tos o resfrío. Debe usarse según indicación profesional; la dificultad para respirar requiere atención urgente.",
+        tags: "salbutamol inhalador asma silbido pecho respiracion falta de aire tos"
+      },
+      {
+        name: "Dextrometorfano jarabe",
+        group: "Antitusivo",
+        description: "Algunos jarabes indican 15 mg/5 ml; comprueba siempre la concentración exacta en el envase.",
+        caution: "No es apropiado para todas las edades ni para todos los tipos de tos. Consulta a un adulto y a un profesional.",
+        tags: "dextrometorfano jarabe tos tos seca garganta"
+      },
+      {
+        name: "Fluimucil",
+        group: "Producto para la tos o flema",
+        description: "Algunas presentaciones contienen acetilcisteína. Confirma el ingrediente y el formato en el envase.",
+        caution: "La tos puede tener distintas causas. Consulta si persiste o empeora.",
+        tags: "tos flema moco pecho tos con flema"
+      },
+      {
+        name: "Bisolvon",
+        group: "Producto para la tos",
+        description: "Existen distintas presentaciones y fórmulas. Revisa el principio activo en el envase.",
+        caution: "No todos los productos para la tos sirven para la misma situación. Consulta antes de elegir.",
+        tags: "tos flema moco pecho tos con flema"
+      },
+      {
+        name: "Muxol",
+        group: "Producto para la tos",
+        description: "La composición y el formato pueden variar. Comprueba la etiqueta de la presentación.",
+        caution: "Si hay falta de aire, dolor de pecho o la tos empeora, busca atención de salud.",
+        tags: "tos flema moco pecho tos con flema"
+      },
+      {
+        name: "Loratadina",
+        group: "Antihistamínico",
+        description: "Hay tabletas de distintas presentaciones; 10 mg es un ejemplo. Se utiliza para algunos síntomas de alergia.",
+        caution: "La congestión puede tener distintas causas. Revisa el envase y consulta antes de usarla.",
+        tags: "loratadina alergia estornudos picazon rinitis nariz congestion moco"
+      },
+      {
+        name: "Cetirizina",
+        group: "Antihistamínico",
+        description: "Hay tabletas de distintas presentaciones; 10 mg es un ejemplo. Puede utilizarse para síntomas de alergia.",
+        caution: "Puede causar sueño en algunas personas. Consulta antes de combinarla con otros medicamentos.",
+        tags: "cetirizina alergia estornudos picazon rinitis nariz congestion moco"
+      },
+      {
+        name: "Degraler",
+        group: "Marca para alergias",
+        description: "Revisa el principio activo de la presentación y sus advertencias.",
+        caution: "Algunos productos para alergia pueden causar sueño o interactuar con otros productos.",
+        tags: "alergia estornudos picazon nariz moco polvo frio rinitis"
+      },
+      {
+        name: "Alerfast",
+        group: "Marca para alergias",
+        description: "La composición depende de la presentación. Confirma el principio activo en el envase.",
+        caution: "No combines medicamentos para alergia sin preguntar a un profesional.",
+        tags: "alergia estornudos picazon nariz moco polvo frio rinitis"
+      },
+      {
+        name: "Claritin",
+        group: "Marca para alergias",
+        description: "Verifica el principio activo y las instrucciones de la presentación que tienes.",
+        caution: "Consulta si tomas otros medicamentos o si se trata de un menor de edad.",
+        tags: "alergia estornudos picazon nariz moco polvo frio rinitis"
+      },
+      {
+        name: "Mebocaína",
+        group: "Pastillas para la garganta",
+        description: "Las pastillas para la garganta pueden tener distintos ingredientes según la marca y la presentación.",
+        caution: "Sigue el envase. Consulta si el dolor persiste o cuesta tragar o respirar.",
+        tags: "garganta dolor de garganta irritacion tos"
+      },
+      {
+        name: "Trochi",
+        group: "Pastillas para la garganta",
+        description: "El nombre comercial puede tener distintas presentaciones. Comprueba sus ingredientes en el empaque.",
+        caution: "No excedas las indicaciones del envase y consulta si el malestar continúa.",
+        tags: "garganta dolor de garganta irritacion tos"
+      },
+      {
+        name: "Amoxicilina",
+        group: "Antibiótico · requiere receta",
+        description: "500 mg es un ejemplo de presentación, no una pauta para tomarla. Requiere evaluación e indicación médica.",
+        caution: "No sirve contra virus como los que causan muchos resfríos. No uses sobrantes ni la compartas.",
+        tags: "amoxicilina antibiotico infeccion bacterias garganta dolor de garganta"
+      },
+      {
+        name: "Azitromicina",
+        group: "Antibiótico · requiere receta",
+        description: "500 mg es un ejemplo de presentación, no una pauta para tomarla. Requiere evaluación e indicación médica.",
+        caution: "No sirve para tratar un resfrío viral. No uses sobrantes ni la compartas.",
+        tags: "azitromicina antibiotico infeccion bacterias garganta"
+      }
+    ];
+
+    const cardsContainer = document.getElementById("cards");
+    const searchInput = document.getElementById("search");
+    const emptyMessage = document.getElementById("empty");
+    const resultCount = document.getElementById("resultCount");
+
+    function normalize(text) {
+      return text
+        .toLocaleLowerCase("es")
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "");
+    }
+
+    function makeCard(item) {
+      const article = document.createElement("article");
+      article.className = "card";
+
+      const tag = document.createElement("span");
+      tag.className = "tag";
+      tag.textContent = item.group;
+
+      const title = document.createElement("h3");
+      title.textContent = item.name;
+
+      const description = document.createElement("p");
+      description.textContent = item.description;
+
+      const caution = document.createElement("div");
+      caution.className = "caution";
+
+      const strong = document.createElement("strong");
+      strong.textContent = "Precaución: ";
+      caution.append(strong, document.createTextNode(item.caution));
+
+      article.append(tag, title, description, caution);
+      return article;
+    }
+
+    function render() {
+      const query = normalize(searchInput.value.trim());
+
+      const matches = medicines.filter(item => {
+        const searchable = normalize(
+          item.name + " " + item.group + " " + item.description + " " + item.caution + " " + item.tags
+        );
+        return searchable.includes(query);
+      });
+
+      cardsContainer.replaceChildren(...matches.map(makeCard));
+      resultCount.textContent =
+        `${matches.length} ${matches.length === 1 ? "resultado" : "resultados"}`;
+      emptyMessage.style.display = matches.length ? "none" : "block";
+    }
+
+    searchInput.addEventListener("input", () => {
+      document.querySelectorAll(".chip").forEach(chip => chip.classList.remove("active"));
+      render();
+    });
+
+    document.querySelectorAll(".chip").forEach(chip => {
+      chip.addEventListener("click", () => {
+        searchInput.value = chip.dataset.query;
+        document.querySelectorAll(".chip").forEach(button => button.classList.remove("active"));
+        chip.classList.add("active");
+        render();
+        document.getElementById("medicamentos").scrollIntoView({ behavior: "smooth" });
+      });
+    });
+
+    document.getElementById("clear").addEventListener("click", () => {
+      searchInput.value = "";
+      document.querySelectorAll(".chip").forEach(chip => chip.classList.remove("active"));
+      render();
+      searchInput.focus();
+    });
+
+    render();
+  </script>
+</body>
+</html>
